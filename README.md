@@ -16,4 +16,4 @@ Rxjava 最基本的原理 所有的操作符 都会形成一个新继承Observab
 
 **2、大体的Rxjava结构**
 
-![img]()
+![img](https://github.com/cy-cyx/Rxjava/blob/master/img/IMG_20200213_023823.jpg)
