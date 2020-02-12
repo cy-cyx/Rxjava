@@ -9,6 +9,7 @@ import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class BaseImpl implements Base {
@@ -58,13 +59,19 @@ public class BaseImpl implements Base {
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-
+                emitter.onNext("aaa");
             }
-        }).subscribeOn(Schedulers.io())
+        })
+                .subscribeOn(Schedulers.io())
                 .subscribeOn(Schedulers.newThread()) // 测试多个subscribeOn
                 .observeOn(Schedulers.newThread())
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(String s) throws Exception {
+                        return s+"a";
+                    }
+                })
                 .subscribe(new Observer<String>() {
-
                     @Override
                     public void onSubscribe(Disposable d) {
 
