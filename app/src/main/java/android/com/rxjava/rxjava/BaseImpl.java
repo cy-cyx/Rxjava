@@ -6,9 +6,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -59,6 +57,7 @@ public class BaseImpl implements Base {
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                printThreadName("subscribe");
                 emitter.onNext("aaa");
             }
         })
@@ -68,9 +67,11 @@ public class BaseImpl implements Base {
                 .map(new Function<String, String>() {
                     @Override
                     public String apply(String s) throws Exception {
-                        return s+"a";
+                        printThreadName("map");
+                        return s + "a";
                     }
                 })
+                .observeOn(Schedulers.io())
                 .subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -79,7 +80,7 @@ public class BaseImpl implements Base {
 
                     @Override
                     public void onNext(String s) {
-
+                        printThreadName("observe");
                     }
 
                     @Override
@@ -92,5 +93,10 @@ public class BaseImpl implements Base {
 
                     }
                 });
+    }
+
+    private void printThreadName(String s) {
+        String name = Thread.currentThread().getName();
+        Log.d("xx", s + ": printThreadName: " + name);
     }
 }
